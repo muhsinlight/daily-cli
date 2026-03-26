@@ -5,13 +5,13 @@ import { http } from '../utils/http.js';
 
 export async function showAdvice(spinner) {
   clearScreen();
-  spinner = (spinner || ora({ text: '  Tavsiye alınıyor...' })).start();
+  spinner = (spinner || ora({ text: '  Fetching advice...' })).start();
 
   try {
     const advice = await http.get(process.env.ADVICE_API_URL, { retry: 4 });
-    spinner.succeed(chalk.green('  Günün Tavsiyesi'));
+    spinner.succeed(chalk.green('  Advice of the Day'));
     console.log(`\n    "${advice.data.slip.advice}"`);
   } catch (e) {
-    spinner.fail(chalk.red('  Tavsiye alınamadı.'));
+    spinner.fail(chalk.red('  Could not fetch advice.'));
   }
 }

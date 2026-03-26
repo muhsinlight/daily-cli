@@ -29,22 +29,22 @@ export async function getPrayerTimes() {
 
 export async function showPrayer(spinner) {
   clearScreen();
-  spinner = (spinner || ora({ text: '  Vakitler alınıyor...' })).start();
+  spinner = (spinner || ora({ text: '  Fetching prayer times...' })).start();
 
   try {
     const p = await getPrayerTimes();
-    const cacheTag = p.fromCache ? chalk.gray(' (Önbellek)') : '';
-    spinner.succeed(chalk.green(`  Ezan Vakitleri (${p.city})${cacheTag}`));
+    const cacheTag = p.fromCache ? chalk.gray(' (Cache)') : '';
+    spinner.succeed(chalk.green(`  Prayer Times (${p.city})${cacheTag}`));
 
     const t = p.timings;
     const table = new Table({
-      head: ['İmsak', 'Güneş', 'Öğle', 'İkindi', 'Akşam', 'Yatsı'].map(h => chalk.cyan(h))
+      head: ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].map(h => chalk.cyan(h))
     });
 
     table.push([t.Fajr, t.Sunrise, t.Dhuhr, t.Asr, t.Maghrib, t.Isha]);
 
     console.log('\n' + table.toString());
   } catch (e) {
-    spinner.fail(chalk.red('  Namaz vakitleri alınamadı.'));
+    spinner.fail(chalk.red('  Could not fetch prayer times.'));
   }
 }

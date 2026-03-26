@@ -7,10 +7,9 @@ import { getCache, setCache } from '../utils/cache.js';
 import { http } from '../utils/http.js';
 
 export async function getStock(symbol) {
-  // Yahoo Finance kaldırıldı
   return {
     symbol,
-    price: 'Kaldırıldı',
+    price: 'Removed',
     changePercent: '0.00',
     currency: '---'
   };
@@ -31,7 +30,7 @@ export async function getCurrencyAndMetals(forceRefresh = false) {
     const list = Array.isArray(rawData) ? rawData : (rawData && rawData.data ? rawData.data : []);
 
     if (!Array.isArray(list) || list.length === 0) {
-      throw new Error('API\'den veri alınamadı veya liste boş.');
+      throw new Error('Could not fetch data from API or list is empty.');
     }
 
     const findPrice = (name) => {
@@ -46,7 +45,7 @@ export async function getCurrencyAndMetals(forceRefresh = false) {
     silverGramTRY = findPrice('Gümüş');
 
   } catch (e) {
-    throw new Error(`Yerel API Hatası: ${e.message}`);
+    throw new Error(`Local API Error: ${e.message}`);
   }
 
   const format = (val, decimals = 4) =>
@@ -79,7 +78,7 @@ export async function showStocks() {
   const config = getConfig();
   const symbols = config.stocks || ['THYAO.IS', 'AAPL', 'BTC-USD'];
   const table = new Table({
-    head: ['Sembol', 'Fiyat', 'Değişim'].map(h => chalk.cyan(h))
+    head: ['Symbol', 'Price', 'Change'].map(h => chalk.cyan(h))
   });
 
   let anyFromCache = false;
@@ -89,40 +88,40 @@ export async function showStocks() {
       if (s.fromCache) anyFromCache = true;
       table.push([s.symbol, `${s.price} ${s.currency}`, formatChange(s.changePercent)]);
     } catch (e) {
-      table.push([sym, 'N/A', chalk.red('Veri yok')]);
+      table.push([sym, 'N/A', chalk.red('No data')]);
     }
   }
-  const cacheTag = anyFromCache ? chalk.gray(' (Önbellek)') : '';
-  console.log(`\n  [BORSA]${cacheTag}\n` + table.toString());
+  const cacheTag = anyFromCache ? chalk.gray(' (Cache)') : '';
+  console.log(`\n  [STOCKS]${cacheTag}\n` + table.toString());
 }
 
 export async function showCurrency(spinner) {
   clearScreen();
-  spinner = (spinner || ora({ text: '  Veriler alınıyor...' })).start();
+  spinner = (spinner || ora({ text: '  Fetching data...' })).start();
 
   try {
     const m = await getCurrencyAndMetals();
-    const cacheTag = m.fromCache ? chalk.gray(' (Önbellek)') : '';
-    spinner.succeed(chalk.green(`  Döviz & Metaller${cacheTag}`));
+    const cacheTag = m.fromCache ? chalk.gray(' (Cache)') : '';
+    spinner.succeed(chalk.green(`  Currency & Metals${cacheTag}`));
 
     const table = new Table({
-      head: ['Döviz/Metal', 'Fiyat (₺)'].map(h => chalk.cyan(h))
+      head: ['Currency/Metal', 'Price (₺)'].map(h => chalk.cyan(h))
     });
 
     table.push(
-      ['Dolar', m.usdTry],
-      ['Euro', m.eurTry],
-      ['Sterlin', m.sterlinTry],
-      ['Altın Gram', m.gold.gram],
-      ['Çeyrek Altın', m.gold.ceyrek],
-      ['Yarım Altın', m.gold.yarim],
-      ['Tam Altın', m.gold.tam],
-      ['Cumhuriyet Altını', m.gold.cumhuriyet],
-      ['Gümüş (gr)', m.silver.gramTRY]
+      ['USD', m.usdTry],
+      ['EUR', m.eurTry],
+      ['GBP', m.sterlinTry],
+      ['Gold Gram', m.gold.gram],
+      ['Quarter Gold', m.gold.ceyrek],
+      ['Half Gold', m.gold.yarim],
+      ['Full Gold', m.gold.tam],
+      ['Republic Gold', m.gold.cumhuriyet],
+      ['Silver (gr)', m.silver.gramTRY]
     );
 
     console.log('\n' + table.toString());
   } catch (e) {
-    spinner.fail(chalk.red('  Döviz/metal verileri alınamadı.'));
+    spinner.fail(chalk.red('  Could not fetch currency/metal data.'));
   }
 }

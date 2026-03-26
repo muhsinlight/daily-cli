@@ -2,7 +2,6 @@ import chalk from 'chalk';
 import { clearScreen, askQuestion } from '../utils/ui.js';
 import { getConfig, setConfig, getCities } from '../utils/config.js';
 
-// Şehir normalizasyonu
 function normalizeCity(city) {
   return city
     .toLowerCase()
@@ -16,22 +15,19 @@ function normalizeCity(city) {
     .replace(/İ/g, 'i');
 }
 
-// Şehir validasyonu
 function validateTurkishCity(input) {
   if (!input || input.trim().length < 2) {
-    return { valid: false, message: 'En az 2 karakter girmelisiniz.' };
+    return { valid: false, message: 'You must enter at least 2 characters.' };
   }
   
   const TURKISH_CITIES = getCities();
   const normalized = normalizeCity(input);
   
-  // Tam eşleşme
   const exactMatch = TURKISH_CITIES.find(city => normalizeCity(city) === normalized);
   if (exactMatch) {
     return { valid: true, city: exactMatch };
   }
   
-  // Başlangıç eşleşmesi (min 3 karakter)
   if (normalized.length >= 3) {
     const matches = TURKISH_CITIES.filter(city => normalizeCity(city).startsWith(normalized));
     
@@ -42,21 +38,21 @@ function validateTurkishCity(input) {
     if (matches.length > 1) {
       return { 
         valid: false, 
-        message: `Birden fazla eşleşme bulundu: ${matches.slice(0, 5).join(', ')}${matches.length > 5 ? '...' : ''}`,
+        message: `Multiple matches found: ${matches.slice(0, 5).join(', ')}${matches.length > 5 ? '...' : ''}`,
         matches 
       };
     }
   }
   
-  return { valid: false, message: 'Geçerli bir Türkiye ili değil.' };
+  return { valid: false, message: 'Not a valid Turkish city.' };
 }
 
 const SETTING_ACTIONS = {
   '1': async () => {
-    console.log(chalk.gray('\n    Türkiye\'deki 81 ilden birini girebilirsiniz.'));
-    console.log(chalk.gray('    Örnek: İstanbul, Ankara, İzmir, Nevşehir\n'));
+    console.log(chalk.gray('\n    You can enter one of the 81 Turkish cities.'));
+    console.log(chalk.gray('    Example: Istanbul, Ankara, Izmir, Nevsehir\n'));
     
-    const newCity = await askQuestion(chalk.yellow('  Yeni şehir adı: '));
+    const newCity = await askQuestion(chalk.yellow('  New city name: '));
     
     if (newCity) {
       const validation = validateTurkishCity(newCity);
@@ -65,16 +61,15 @@ const SETTING_ACTIONS = {
         setConfig({ city: validation.city });
         
         if (validation.suggestion) {
-          console.log(chalk.green(`\n  ✓ Şehir "${validation.city}" olarak güncellendi!`));
+          console.log(chalk.green(`\n  ✓ City updated to "${validation.city}"!`));
         } else {
-          console.log(chalk.green('\n  ✓ Şehir güncellendi!'));
+          console.log(chalk.green('\n  ✓ City updated!'));
         }
       } else {
         console.log(chalk.red(`\n  ✗ ${validation.message}`));
         
-        // Öneriler varsa göster
         if (validation.matches && validation.matches.length > 0) {
-          console.log(chalk.yellow('\n    Bunlardan birini mi demek istediniz?'));
+          console.log(chalk.yellow('\n    Did you mean one of these?'));
           validation.matches.slice(0, 5).forEach(city => {
             console.log(chalk.gray(`      - ${city}`));
           });
@@ -83,18 +78,18 @@ const SETTING_ACTIONS = {
     }
   },
   '2': async () => {
-    const newCountry = await askQuestion(chalk.yellow('\n  Yeni ülke adı: '));
+    const newCountry = await askQuestion(chalk.yellow('\n  New country name: '));
     if (newCountry) {
       setConfig({ country: newCountry });
-      console.log(chalk.green('\n  ✓ Ülke güncellendi!'));
+      console.log(chalk.green('\n  ✓ Country updated!'));
     }
   },
   '3': async () => {
-    const newStocks = await askQuestion(chalk.yellow('\n  Hisseleri virgülle ayırarak gir (örn: AAPL, BTC-USD, THYAO.IS): '));
+    const newStocks = await askQuestion(chalk.yellow('\n  Enter stocks separated by commas (e.g., AAPL, BTC-USD): '));
     if (newStocks) {
       const stocksArr = newStocks.split(',').map(s => s.trim()).filter(Boolean);
       setConfig({ stocks: stocksArr });
-      console.log(chalk.green('\n  ✓ Hisse listesi güncellendi!'));
+      console.log(chalk.green('\n  ✓ Stock list updated!'));
     }
   }
 };
@@ -103,13 +98,13 @@ export async function showSettings() {
   clearScreen();
   const config = getConfig();
 
-  console.log(chalk.bold.cyan('\n  [AYARLAR]\n'));
-  console.log(`    ${chalk.yellow('1.')} Şehir Değiştir (Mevcut: ${chalk.white(config.city)})`);
-  console.log(`    ${chalk.yellow('2.')} Ülke Değiştir (Mevcut: ${chalk.white(config.country)})`);
-  console.log(`    ${chalk.yellow('3.')} Takip Edilen Hisseleri Düzenle (Mevcut: ${chalk.white(config.stocks.join(', '))})`);
-  console.log(`    ${chalk.yellow('0.')} Geri`);
+  console.log(chalk.bold.cyan('\n  [SETTINGS]\n'));
+  console.log(`    ${chalk.yellow('1.')} Change City (Current: ${chalk.white(config.city)})`);
+  console.log(`    ${chalk.yellow('2.')} Change Country (Current: ${chalk.white(config.country)})`);
+  console.log(`    ${chalk.yellow('3.')} Edit Tracked Stocks (Current: ${chalk.white(config.stocks.join(', '))})`);
+  console.log(`    ${chalk.yellow('0.')} Back`);
 
-  const choice = await askQuestion(chalk.cyan('\n  Seçim yap: '));
+  const choice = await askQuestion(chalk.cyan('\n  Your choice: '));
   
   const action = SETTING_ACTIONS[choice];
   if (action) {

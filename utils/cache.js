@@ -48,7 +48,8 @@ function cleanUp(data) {
 
 export function getCache(key) {
   try {
-    let data = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
+    const dataRaw = fs.readFileSync(CACHE_FILE, 'utf8');
+    let data = dataRaw ? JSON.parse(dataRaw) : {};
     
     const { data: cleanedData, changed } = cleanUp(data);
     if (changed) {
@@ -64,7 +65,8 @@ export function getCache(key) {
 
 export function setCache(key, value, ttlMinutes) {
   try {
-    let data = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
+    const dataRaw = fs.readFileSync(CACHE_FILE, 'utf8');
+    let data = dataRaw ? JSON.parse(dataRaw) : {};
     
     const { data: cleanedData } = cleanUp(data);
     
@@ -76,4 +78,3 @@ export function setCache(key, value, ttlMinutes) {
     fs.writeFileSync(CACHE_FILE, JSON.stringify(cleanedData, null, 2));
   } catch (e) {}
 }
-  

@@ -47,17 +47,20 @@ async function main() {
         await action();
         await waitForKey();
       } else {
-        console.log(chalk.red('\n  Lütfen sadece menü rakamlarını (0-8) kullanınız!'));
+        if (!key || key === '\r' || key === '\n' || key === 'return') {
+           continue;
+        }
+        console.log(chalk.red('\n  Please use only menu numbers (0-8)!'));
         await new Promise(r => setTimeout(r, 1200)); 
       }
     } catch (err) {
-      console.error(chalk.red('\n  Bir hata oluştu:'), err?.message || err);
+      console.error(chalk.red('\n  An error occurred:'), err?.message || err);
       await waitForKey();
     }
   }
 }
 
 main().catch((err) => {
-  console.error(chalk.red('\n  Beklenmeyen hata:'), err?.message || err);
+  console.error(chalk.red('\n  Unexpected error:'), err?.message || err);
   process.exit(1);
 });

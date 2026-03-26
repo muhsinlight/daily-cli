@@ -91,7 +91,7 @@ export async function getTranslation(word) {
       saveDictCache(cache);
       return data;
     } else {
-      throw new Error('Kelime karşılığı bulunamadı.');
+      throw new Error('Translation not found.');
     }
   } catch (error) {
     if (browser) await browser.close();
@@ -101,20 +101,20 @@ export async function getTranslation(word) {
 
 export async function showTranslation(spinner) {
   clearScreen();
-  const word = await askQuestion(chalk.cyan('\n  Öğrenmek istediğin İngilizce/Türkçe kelime: '));
+  const word = await askQuestion(chalk.cyan('\n  Word you want to learn (English/Turkish): '));
   if (!word || !word.trim()) return;
-  spinner = (spinner || ora({ text: '  Puppeteer ile Tureng analiz ediliyor...' })).start();
+  spinner = (spinner || ora({ text: '  Analyzing Tureng with Puppeteer...' })).start();
   try {
     const res = await getTranslation(word);
-    spinner.succeed(chalk.green('  Tureng Verileri Çekildi!'));
-    const cacheTag = res.fromCache ? chalk.gray(' (Önbellekten)') : '';
-    console.log(`\n    Kelime: ${chalk.bold.yellow(res.word)}${cacheTag}`);
+    spinner.succeed(chalk.green('  Tureng data fetched!'));
+    const cacheTag = res.fromCache ? chalk.gray(' (From cache)') : '';
+    console.log(`\n    Word: ${chalk.bold.yellow(res.word)}${cacheTag}`);
     console.log(chalk.gray('    ───────────────────────────────────────────────'));
     res.translations.forEach((tr, index) => {
       console.log(`    ${chalk.blue(index + 1)}. [${chalk.magenta(tr.category)}] ${chalk.cyan(tr.target)}`);
     });
     console.log('');
   } catch (e) {
-    spinner.fail(chalk.red('  Hata: ' + (e.message || 'Bilinmeyen hata')));
+    spinner.fail(chalk.red('  Error: ' + (e.message || 'Unknown error')));
   }
 }

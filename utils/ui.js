@@ -27,7 +27,7 @@ export function setRawModeSafe(enabled) {
 
 export async function waitForKey() {
   return new Promise((resolve) => {
-    console.log(chalk.gray('\n  Menüye dönmek için herhangi bir tuşa bas...'));
+    console.log(chalk.gray('\n  Press any key to return to menu...'));
     
     setRawModeSafe(true);
     process.stdin.resume();
@@ -65,20 +65,20 @@ export function showBanner() {
   const side = chalk.cyan('║');
 
   console.log(`  ${chalk.cyan('╔')}${border}${chalk.cyan('╗')}`);
-  console.log(`  ${side}${chalk.bold.cyan('        --- GÜNLÜK YAŞAM TERMINAL DASHBOARD ---       ')}${side}`);
-  console.log(`  ${side}${chalk.gray('      Borsa · Döviz · Hava · Ezan · Çeviri            ')}${side}`);
+  console.log(`  ${side}${chalk.bold.cyan('        --- DAILY LIFE TERMINAL DASHBOARD ---         ')}${side}`);
+  console.log(`  ${side}${chalk.gray('      Stocks · Currencies · Weather · Prayer · Trans  ')}${side}`);
   console.log(`  ${chalk.cyan('╚')}${border}${chalk.cyan('╝')}\n`);
 
   const menu = [
-    { k: '1', n: 'Hava Durumu' },
-    { k: '2', n: 'Borsa / Hisse' },
-    { k: '3', n: 'Döviz & Metaller' },
-    { k: '4', n: 'Son Haberler' },
-    { k: '5', n: 'Namaz Vakitleri' },
-    { k: '6', n: 'Günün Tavsiyesi' },
-    { k: '7', n: 'İngilizce Çeviri & Örnek' },
-    { k: '8', n: 'Ayarlar (Şehir, Hisse vb.)' },
-    { k: '0', n: 'Çıkış' }
+    { k: '1', n: 'Weather Forecast' },
+    { k: '2', n: 'Stocks / Shares' },
+    { k: '3', n: 'Currencies & Metals' },
+    { k: '4', n: 'Latest News' },
+    { k: '5', n: 'Prayer Times' },
+    { k: '6', n: 'Advice of the Day' },
+    { k: '7', n: 'English Translation & Examples' },
+    { k: '8', n: 'Settings (City, Stocks etc.)' },
+    { k: '0', n: 'Exit' }
   ];
 
   menu.forEach(item => {
@@ -87,7 +87,7 @@ export function showBanner() {
   });
 
   console.log(chalk.cyan(`\n  ${'─'.repeat(w)}\n`));
-  console.log(chalk.yellow('  Seçim yap: '));
+  console.log(chalk.yellow('  Your choice: '));
 }
 
 export async function getMenuKey() {
