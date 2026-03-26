@@ -35,3 +35,13 @@ export function setConfig(newConfig) {
   const merged = { ...current, ...newConfig };
   fs.writeFileSync(CONFIG_FILE, JSON.stringify(merged, null, 2));
 }
+
+export function getCities() {
+  const CITIES_FILE = path.join(ROOT_DIR, 'resources', 'cities.json');
+  try {
+    const data = fs.readFileSync(CITIES_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (e) {
+    return [];
+  }
+}

@@ -1,5 +1,11 @@
 import chalk from 'chalk';
 import readline from 'readline';
+import { exec } from 'child_process';
+
+export function openUrl(url) {
+  const start = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start ""' : 'xdg-open';
+  exec(`${start} ${url}`);
+}
 
 export function clearScreen() {
   process.stdout.write('\x1b]2;daily\x07');
