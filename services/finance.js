@@ -1,30 +1,19 @@
 import chalk from 'chalk';
 import ora from 'ora';
 import Table from 'cli-table3';
-import YahooFinance from 'yahoo-finance2';
 import { clearScreen, formatChange } from '../utils/ui.js';
 import { getConfig } from '../utils/config.js';
 import { getCache, setCache } from '../utils/cache.js';
 import { http } from '../utils/http.js';
 
-const yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey'] });
-
 export async function getStock(symbol) {
-  const cacheKey = `stock_${symbol}`;
-  const cached = getCache(cacheKey);
-  if (cached) return { ...cached, fromCache: true };
-
-  const result = await yahooFinance.quote(symbol);
-
-  const data = {
-    symbol: result.symbol,
-    price: result.regularMarketPrice?.toFixed(2) ?? 'N/A',
-    changePercent: result.regularMarketChangePercent?.toFixed(2) ?? '0.00',
-    currency: result.currency || 'USD'
+  // Yahoo Finance kaldırıldı
+  return {
+    symbol,
+    price: 'Kaldırıldı',
+    changePercent: '0.00',
+    currency: '---'
   };
-
-  setCache(cacheKey, data, 5);
-  return { ...data, fromCache: false };
 }
 
 export async function getCurrencyAndMetals(forceRefresh = false) {
