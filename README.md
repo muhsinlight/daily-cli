@@ -38,22 +38,13 @@ Günlük hayatınızı terminal üzerinden yönetmenizi sağlayan, şık ve inte
 
 ## ⚙️ Yapılandırma (.env)
 
-Projenin çalışması için kök dizinde bir `.env` dosyası oluşturun ve aşağıdaki şablonu kullanın:
+Projenin çalışması için kök dizinde bir `.env` dosyası oluşturmanız gerekmektedir. Örnek yapılandırma için [.env.example](.env.example) dosyasına göz atın.
 
-```env
-# API Anahtarları
-NEWS_API_KEY=YOUR_API_KEY_HERE
-
-# Servis URL'leri (Dokunmayın)
-FRANKFURTER_BASE_URL=https://api.frankfurter.app/latest
-WTTR_BASE_URL=https://wttr.in
-NEWS_API_BASE_URL=https://newsapi.org/v2/top-headlines
-ALADHAN_API_URL=http://api.aladhan.com/v1/timingsByCity
-ADVICE_API_URL=https://api.adviceslip.com/advice
-TRANSLATE_API_URL=https://api.mymemory.translated.net/get
-DICTIONARY_API_URL=https://api.dictionaryapi.dev/api/v2/entries/en
-LOCAL_FINANCE_URL=http://localhost:8000/fiyatlar
+Kolayca kurmak için:
+```bash
+cp .env.example .env
 ```
+Ardından `.env` dosyası içindeki API anahtarlarını kendi anahtarlarınızla güncelleyin.
 
 ---
 
