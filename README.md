@@ -8,7 +8,7 @@ Günlük hayatınızı terminal üzerinden yönetmenizi sağlayan, şık ve inte
 
 - **🌦️ Hava Durumu:** Şehrinize özel anlık hava durumu ve hissedilen sıcaklık.
 - **📈 Borsa / Hisse:** Yahoo Finance entegrasyonu ile canlı hisse senedi ve kripto takibi.
-- **💱 Döviz & Metaller:** Dolar, Euro, Sterlin ve detaylı altın (Gram, Çeyrek, Yarım, Tam, Cumhuriyet) ve gümüş fiyatları.
+- **💱 Döviz & Metaller:** [KapaliCarsi-Tracker](https://github.com/muhsinlight/KapaliCarsi-Tracker) entegrasyonu ile canlı Dolar, Euro, Sterlin ve detaylı altın (Gram, Çeyrek, Yarım, Tam, Cumhuriyet) ve gümüş fiyatları.
 - **📰 Son Haberler:** Sadece Türkiye kaynaklı (`NewsAPI`) en güncel haber başlıkları.
 - **🕌 Namaz Vakitleri:** Bulunduğunuz konuma göre günlük ezan vakitleri.
 - **💡 Günün Tavsiyesi:** Motivasyonunuzu artıracak rastgele tavsiyeler.
@@ -52,6 +52,7 @@ ALADHAN_API_URL=http://api.aladhan.com/v1/timingsByCity
 ADVICE_API_URL=https://api.adviceslip.com/advice
 TRANSLATE_API_URL=https://api.mymemory.translated.net/get
 DICTIONARY_API_URL=https://api.dictionaryapi.dev/api/v2/entries/en
+LOCAL_FINANCE_URL=http://localhost:8000/fiyatlar
 ```
 
 ---
@@ -65,6 +66,7 @@ DICTIONARY_API_URL=https://api.dictionaryapi.dev/api/v2/entries/en
 - **Cli-Table3** (Tablo Tasarımları)
 - **Yahoo Finance 2** (Borsa Verileri)
 - **Dotenv** (Güvenli Yapılandırma)
+- **KapaliCarsi-Tracker** (Finansal Veri Kaynağı)
 
 ---
 
