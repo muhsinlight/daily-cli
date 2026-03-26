@@ -8,7 +8,8 @@ import { fileURLToPath } from 'url';
 import { showBanner, waitForKey, getMenuKey, clearScreen } from './utils/ui.js';
 
 import { showWeather } from './services/weather.js';
-import { showStocks, showCurrency } from './services/finance.js';
+import { showCurrency } from './services/finance.js';
+import { showStocksV2 as showStocks } from './services/stocks.js';
 import { showPrayer } from './services/prayer.js';
 import { showNews } from './services/news.js';
 import { showAdvice } from './services/advice.js';
