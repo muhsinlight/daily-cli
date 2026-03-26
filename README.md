@@ -12,7 +12,7 @@ Günlük hayatınızı terminal üzerinden yönetmenizi sağlayan, şık ve inte
 - **📰 Son Haberler:** Sadece Türkiye kaynaklı (`NewsAPI`) en güncel haber başlıkları.
 - **🕌 Namaz Vakitleri:** Bulunduğunuz konuma göre günlük ezan vakitleri.
 - **💡 Günün Tavsiyesi:** Motivasyonunuzu artıracak rastgele tavsiyeler.
-- **📚 İngilizce Çeviri & Örnek:** İngilizce kelime çevirisi, otomatik örnek cümle bulma ve örnek cümlenin çevirisi.
+- **📚 Tureng Çeviri (Puppeteer):** Cloudflare korumalı Tureng üzerinden kelime çevirileri (Yaygın kullanım odaklı).
 - **🛠️ Global Kullanım:** `npm link` desteği ile her klasörden sadece `daily` yazarak erişim.
 
 ---
@@ -23,6 +23,7 @@ Günlük hayatınızı terminal üzerinden yönetmenizi sağlayan, şık ve inte
    ```bash
    npm install
    ```
+   *Not: Puppeteer'ın çalışabilmesi için Chromium indirilmesi gerekebilir (otomatik).*
 
 2. **Global Komut Olarak Ayarlayın:**
    ```bash
@@ -44,13 +45,14 @@ Kolayca kurmak için:
 ```bash
 cp .env.example .env
 ```
-Ardından `.env` dosyası içindeki API anahtarlarını kendi anahtarlarınızla güncelleyin.
+Ardından `.env` dosyası içindeki `NEWS_API_KEY` değişkenini kendi anahtarınızla güncelleyin.
 
 ---
 
 ## 🛠️ Kullanılan Teknolojiler
 
 - **Node.js** (v16+)
+- **Puppeteer** (Tureng Scraping - Cloudflare Bypass)
 - **Axios** (HTTP İstekleri)
 - **Chalk** (Renkli Terminal Çıktıları)
 - **Ora** (Elegant Spinner)

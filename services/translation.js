@@ -1,15 +1,14 @@
+import puppeteer from 'puppeteer';
 import chalk from 'chalk';
 import ora from 'ora';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { clearScreen, askQuestion } from '../utils/ui.js';
-import { http } from '../utils/http.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CACHE_FILE = path.resolve(__dirname, '../data/dictionary_cache.json');
 
-// Önbelleği yükleyelim
 function getDictCache() {
   try {
     if (!fs.existsSync(CACHE_FILE)) return {};
@@ -33,60 +32,89 @@ export async function getTranslation(word) {
     return { ...cache[cleanWord], fromCache: true };
   }
 
-  const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) throw new Error('GROQ_API_KEY bulunamadı. Lütfen .env dosyasını kontrol edin.');
-
-  const prompt = `You are a professional English-Turkish dictionary. Translate the following English word to Turkish. 
-  Provide: 1. Main Turkish meaning. 2. IPA pronunciation. 3. A natural, contextual example sentence in English. 4. Turkish translation of that sentence. 
-  Response MUST be a valid JSON object only:
-  {
-    "word": "${cleanWord}",
-    "meaning": "turkish_meaning",
-    "ipa": "ipa_pronunciation",
-    "example": "natural_english_sentence",
-    "example_tr": "turkish_translation_of_sentence"
-  }`;
-
-  const resp = await http.post('https://api.groq.com/openai/v1/chat/completions', {
-    model: 'llama-3.1-8b-instant',
-    messages: [{ role: 'user', content: prompt }],
-    response_format: { type: 'json_object' }
-  }, {
-    headers: { 'Authorization': `Bearer ${apiKey}` }
+  const browser = await puppeteer.launch({
+    headless: "new",
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
 
-  const result = JSON.parse(resp.data.choices[0].message.content);
-  
-  // Önbelleğe kaydet
-  cache[cleanWord] = result;
-  saveDictCache(cache);
-
-  return { ...result, fromCache: false };
+  try {
+    const page = await browser.newPage();
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
+    const url = `https://tureng.com/en/turkish-english/${encodeURIComponent(cleanWord)}`;
+    await page.goto(url, {
+      waitUntil: 'networkidle2',
+      timeout: 30000
+    });
+    await new Promise(r => setTimeout(r, 1500));
+    const results = await page.evaluate(() => {
+      const allTables = Array.from(document.querySelectorAll('table.searchResultsTable'));
+      if (allTables.length === 0) return [];
+      let primaryTables = [];
+      allTables.forEach(table => {
+        let prev = table.previousElementSibling;
+        while (prev && !['H2', 'H3', 'H1'].includes(prev.tagName)) {
+          prev = prev.previousElementSibling;
+        }
+        const headerText = prev ? prev.textContent.toLowerCase() : '';
+        if (headerText.includes('yaygın kullanım') || headerText.includes('common usage')) {
+          primaryTables.push(table);
+        }
+      });
+      const tablesToProcess = primaryTables.length > 0 ? primaryTables : [allTables[0]];
+      return tablesToProcess.flatMap(table => {
+        return Array.from(table.querySelectorAll('tr')).map(row => {
+          const cells = row.querySelectorAll('td');
+          if (cells.length >= 4) {
+            const cat = cells[1]?.textContent.trim();
+            const source = cells[2]?.textContent.trim();
+            const target = cells[3]?.textContent.trim();
+            if (target && source && cat) {
+              return {
+                category: cat,
+                source: source,
+                target: target
+              };
+            }
+          }
+          return null;
+        });
+      }).filter(Boolean);
+    });
+    await browser.close();
+    if (results.length > 0) {
+      const data = {
+        word: cleanWord,
+        translations: results.slice(0, 5),
+        fromCache: false
+      };
+      cache[cleanWord] = data;
+      saveDictCache(cache);
+      return data;
+    } else {
+      throw new Error('Kelime karşılığı bulunamadı.');
+    }
+  } catch (error) {
+    if (browser) await browser.close();
+    throw error;
+  }
 }
 
 export async function showTranslation(spinner) {
   clearScreen();
-
-  const word = await askQuestion(chalk.cyan('\n  Öğrenmek istediğin İngilizce kelime: '));
+  const word = await askQuestion(chalk.cyan('\n  Öğrenmek istediğin İngilizce/Türkçe kelime: '));
   if (!word || !word.trim()) return;
-
-  spinner = (spinner || ora({ text: '  Llama 3 analizi yapıyor...' })).start();
-
+  spinner = (spinner || ora({ text: '  Puppeteer ile Tureng analiz ediliyor...' })).start();
   try {
     const res = await getTranslation(word);
-    spinner.succeed(chalk.green('  Sonuçlar Hazır!'));
-
+    spinner.succeed(chalk.green('  Tureng Verileri Çekildi!'));
     const cacheTag = res.fromCache ? chalk.gray(' (Önbellekten)') : '';
-
     console.log(`\n    Kelime: ${chalk.bold.yellow(res.word)}${cacheTag}`);
-    console.log(`    Okunuş: ${chalk.gray(res.ipa)}`);
-    console.log(`    Türkçesi: ${chalk.cyan(res.meaning)}`);
-    console.log(`\n    [Örnek Cümle]:`);
-    console.log(`    "${chalk.white(res.example)}"`);
-    console.log(`\n    [Cümle Çevirisi]:`);
-    console.log(`    "${chalk.gray(res.example_tr)}"`);
-
+    console.log(chalk.gray('    ───────────────────────────────────────────────'));
+    res.translations.forEach((tr, index) => {
+      console.log(`    ${chalk.blue(index + 1)}. [${chalk.magenta(tr.category)}] ${chalk.cyan(tr.target)}`);
+    });
+    console.log('');
   } catch (e) {
-    spinner.fail(chalk.red('  Analiz başarısız: ' + (e.message || 'Bilinmeyen hata')));
+    spinner.fail(chalk.red('  Hata: ' + (e.message || 'Bilinmeyen hata')));
   }
 }
