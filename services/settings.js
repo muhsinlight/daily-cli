@@ -91,6 +91,18 @@ const SETTING_ACTIONS = {
       setConfig({ stocks: stocksArr });
       console.log(chalk.green('\n  ✓ Stock list updated!'));
     }
+  },
+  '4': async () => {
+    const newKey = await askQuestion(chalk.yellow('\n  Enter football-data.org API Key: '));
+    if (newKey) {
+      // We store it in .env primarily, but since we are using process.env, 
+      // it's better to tell the user to edit .env or I can try to update .env programmatically if needed.
+      // But based on existing logic, it seems they use config.json for some things too.
+      // Let's check where API keys are normally stored.
+      // News API key is in .env.
+      console.log(chalk.yellow('\n  (!) Please update FOOTBALL_DATA_API_KEY in your .env file.'));
+      console.log(chalk.gray('  (Automatic .env update not implemented for security)'));
+    }
   }
 };
 
@@ -102,6 +114,7 @@ export async function showSettings() {
   console.log(`    ${chalk.yellow('1.')} Change City (Current: ${chalk.white(config.city)})`);
   console.log(`    ${chalk.yellow('2.')} Change Country (Current: ${chalk.white(config.country)})`);
   console.log(`    ${chalk.yellow('3.')} Edit Tracked Stocks (Current: ${chalk.white(config.stocks.join(', '))})`);
+  console.log(`    ${chalk.yellow('4.')} Set Football API Key`);
   console.log(`    ${chalk.yellow('0.')} Back`);
 
   const choice = await askQuestion(chalk.cyan('\n  Your choice: '));

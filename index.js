@@ -14,6 +14,7 @@ import { showNews } from './services/news.js';
 import { showAdvice } from './services/advice.js';
 import { showTranslation } from './services/translation.js';
 import { showSettings } from './services/settings.js';
+import { showSports } from './services/sports.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,6 +30,7 @@ const MENU_ACTIONS = {
   '6': showAdvice,
   '7': showTranslation,
   '8': showSettings,
+  '9': showSports,
 };
 
 async function main() {
@@ -50,7 +52,7 @@ async function main() {
         if (!key || key === '\r' || key === '\n' || key === 'return') {
            continue;
         }
-        console.log(chalk.red('\n  Please use only menu numbers (0-8)!'));
+        console.log(chalk.red('\n  Please use only menu numbers (0-9)!'));
         await new Promise(r => setTimeout(r, 1200)); 
       }
     } catch (err) {

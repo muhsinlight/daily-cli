@@ -66,7 +66,7 @@ export function showBanner() {
 
   console.log(`  ${chalk.cyan('╔')}${border}${chalk.cyan('╗')}`);
   console.log(`  ${side}${chalk.bold.cyan('        --- DAILY LIFE TERMINAL DASHBOARD ---         ')}${side}`);
-  console.log(`  ${side}${chalk.gray('      Stocks · Currencies · Weather · Prayer · Trans  ')}${side}`);
+  console.log(`  ${side}${chalk.gray('      Stocks · Currencies · Weather · Prayer · Sports ')}${side}`);
   console.log(`  ${chalk.cyan('╚')}${border}${chalk.cyan('╝')}\n`);
 
   const menu = [
@@ -78,6 +78,7 @@ export function showBanner() {
     { k: '6', n: 'Advice of the Day' },
     { k: '7', n: 'English Translation & Examples' },
     { k: '8', n: 'Settings (City, Stocks etc.)' },
+    { k: '9', n: 'Football Matches' },
     { k: '0', n: 'Exit' }
   ];
 

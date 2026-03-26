@@ -12,6 +12,7 @@ Günlük hayatınızı terminal üzerinden yönetmenizi sağlayan, şık ve inte
 - **📰 Son Haberler:** Sadece Türkiye kaynaklı (`NewsAPI`) en güncel haber başlıkları.
 - **🕌 Namaz Vakitleri:** Bulunduğunuz konuma göre günlük ezan vakitleri.
 - **💡 Günün Tavsiyesi:** Motivasyonunuzu artıracak rastgele tavsiyeler.
+- **⚽ Futbol Maçları:** Premier Lig, La Liga, Bundesliga, Serie A ve Şampiyonlar Ligi gibi dev liglerdeki canlı skorlar ve gelecek maçlar.
 - **📚 Tureng Çeviri (Puppeteer):** Cloudflare korumalı Tureng üzerinden kelime çevirileri (Yaygın kullanım odaklı).
 - **🛠️ Global Kullanım:** `npm link` desteği ile her klasörden sadece `daily` yazarak erişim.
 
@@ -45,7 +46,7 @@ Kolayca kurmak için:
 ```bash
 cp .env.example .env
 ```
-Ardından `.env` dosyası içindeki `NEWS_API_KEY` değişkenini kendi anahtarınızla güncelleyin.
+Ardından `.env` dosyası içindeki `NEWS_API_KEY` ve `FOOTBALL_DATA_API_KEY` değişkenlerini kendi anahtarlarınızla güncelleyin.
 
 ---
 
@@ -60,6 +61,7 @@ Ardından `.env` dosyası içindeki `NEWS_API_KEY` değişkenini kendi anahtarı
 - **Yahoo Finance 2** (Borsa Verileri)
 - **Dotenv** (Güvenli Yapılandırma)
 - **KapaliCarsi-Tracker** (Finansal Veri Kaynağı)
+- **Football-Data.org** (Maç Verileri ve Skorlar)
 
 ---
 
