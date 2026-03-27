@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import chalk from 'chalk';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { Command } from 'commander';
 
 import { showBanner, waitForKey, getMenuKey, clearScreen } from './utils/ui.js';
 
@@ -22,6 +23,94 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
+const program = new Command();
+
+program
+  .name('daily')
+  .description('Kişisel Terminal Dashboard')
+  .version('1.0.0');
+
+// Komut Tanımlamaları
+program
+  .command('weather')
+  .alias('w')
+  .description('Hava durumunu gösterir')
+  .action(async () => {
+    await showWeather();
+    process.exit(0);
+  });
+
+program
+  .command('stocks')
+  .alias('s')
+  .description('Borsa verilerini gösterir')
+  .action(async () => {
+    await showStocks();
+    process.exit(0);
+  });
+
+program
+  .command('currency')
+  .alias('c')
+  .description('Döviz kurlarını gösterir')
+  .action(async () => {
+    await showCurrency();
+    process.exit(0);
+  });
+
+program
+  .command('news')
+  .alias('n')
+  .description('Günün haberlerini gösterir')
+  .action(async () => {
+    await showNews();
+    process.exit(0);
+  });
+
+program
+  .command('prayer')
+  .alias('p')
+  .description('Namaz vakitlerini gösterir')
+  .action(async () => {
+    await showPrayer();
+    process.exit(0);
+  });
+
+program
+  .command('advice')
+  .alias('a')
+  .description('Günün tavsiyesini gösterir')
+  .action(async () => {
+    await showAdvice();
+    process.exit(0);
+  });
+
+program
+  .command('translation')
+  .alias('t')
+  .description('Çeviri aracını açar')
+  .action(async () => {
+    await showTranslation();
+    process.exit(0);
+  });
+
+program
+  .command('sports')
+  .alias('sp')
+  .description('Spor müsabakalarını gösterir')
+  .action(async () => {
+    await showSports();
+    process.exit(0);
+  });
+
+program
+  .command('settings')
+  .description('Ayarları açar')
+  .action(async () => {
+    await showSettings();
+    process.exit(0);
+  });
+
 const MENU_ACTIONS = {
   '1': showWeather,
   '2': showStocks,
@@ -34,7 +123,7 @@ const MENU_ACTIONS = {
   '9': showSports,
 };
 
-async function main() {
+async function interactiveMenu() {
   while (true) {
     showBanner();
     const key = await getMenuKey();
@@ -63,7 +152,12 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error(chalk.red('\n  Unexpected error:'), err?.message || err);
-  process.exit(1);
-});
+// Argüman kontrolü
+if (process.argv.length > 2) {
+  program.parse(process.argv);
+} else {
+  interactiveMenu().catch((err) => {
+    console.error(chalk.red('\n  Unexpected error:'), err?.message || err);
+    process.exit(1);
+  });
+}

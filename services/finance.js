@@ -17,7 +17,7 @@ export async function getStock(symbol) {
 
 export async function getCurrencyAndMetals(forceRefresh = false) {
   const cacheKey = 'currency_metals';
-  const cached = forceRefresh ? null : getCache(cacheKey);
+  const cached = forceRefresh ? null : getCache(cacheKey, { freshInSession: true });
   if (cached) return { ...cached, fromCache: true };
 
   const baseUrl = process.env.LOCAL_FINANCE_URL;

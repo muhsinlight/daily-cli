@@ -68,7 +68,7 @@ export async function getWeather() {
   const turkishCity = cityMatch.city;
   const cacheKey = `weather_forecast_${turkishCity}`;
   
-  const cached = getCache(cacheKey);
+  const cached = getCache(cacheKey, { freshInSession: true });
   if (cached) {
     cached.wasCorrection = cityMatch.type !== 'exact';
     cached.originalInput = inputCity;

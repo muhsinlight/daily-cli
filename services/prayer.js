@@ -12,7 +12,7 @@ export async function getPrayerTimes() {
   const country = config.country || 'Turkey';
   const cacheKey = `prayer_${city}`;
 
-  const cached = getCache(cacheKey);
+  const cached = getCache(cacheKey, { freshInSession: true, onlyToday: true });
   if (cached) return { ...cached, fromCache: true };
 
   const url = `${process.env.ALADHAN_API_URL}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=13`;
