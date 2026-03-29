@@ -14,6 +14,7 @@ Günlük hayatınızı terminal üzerinden yönetmenizi sağlayan, şık ve inte
 - **💡 Günün Tavsiyesi:** Motivasyonunuzu artıracak rastgele tavsiyeler.
 - **⚽ Futbol Maçları:** Premier Lig, La Liga, Bundesliga, Serie A ve Şampiyonlar Ligi gibi dev liglerdeki canlı skorlar ve gelecek maçlar.
 - **📚 Tureng Çeviri (Puppeteer):** Cloudflare korumalı Tureng üzerinden kelime çevirileri (Yaygın kullanım odaklı).
+- **🎵 Spotify Müzik Kontrolü:** O an çalan şarkıyı görüntüleme, duraklat/oynat, sonraki/önceki şarkıya geçme, hesap playlist'lerini (Çalma listeleri) görüntüleyip oynatma ve Spotify içinde şarkı/playlist arama yetenekleri (Oauth2 destekli).
 - **🛠️ Global Kullanım:** `npm link` desteği ile her klasörden sadece `daily` yazarak erişim.
 
 ---
@@ -46,7 +47,7 @@ Kolayca kurmak için:
 ```bash
 cp .env.example .env
 ```
-Ardından `.env` dosyası içindeki `NEWS_API_KEY` ve `FOOTBALL_DATA_API_KEY` değişkenlerini kendi anahtarlarınızla güncelleyin.
+Ardından `.env` dosyası içindeki `NEWS_API_KEY`, `FOOTBALL_DATA_API_KEY` ve `SPOTIFY_CLIENT_...` değişkenlerini kendi anahtarlarınızla güncelleyin.
 
 ---
 
@@ -62,6 +63,7 @@ Ardından `.env` dosyası içindeki `NEWS_API_KEY` ve `FOOTBALL_DATA_API_KEY` de
 - **Dotenv** (Güvenli Yapılandırma)
 - **KapaliCarsi-Tracker** (Finansal Veri Kaynağı)
 - **Football-Data.org** (Maç Verileri ve Skorlar)
+- **Spotify Web API** (Kullanıcı hesap kontrolü ve Müzik Entegrasyonu)
 
 ---
 

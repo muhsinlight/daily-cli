@@ -1,5 +1,5 @@
 {
-  "name": "daily-cli",
+  "name": "daily",
   "version": "1.0.0",
   "description": "Kişisel Terminal Dashboard — Borsa | Metaller | Hava | Haberler",
   "type": "module",

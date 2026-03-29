@@ -4,7 +4,7 @@ import { exec } from 'child_process';
 
 export function openUrl(url) {
   const start = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start ""' : 'xdg-open';
-  exec(`${start} ${url}`);
+  exec(`${start} "${url}"`);
 }
 
 export function clearScreen() {
@@ -79,6 +79,7 @@ export function showBanner() {
     { k: '7', n: 'English Translation & Examples' },
     { k: '8', n: 'Settings (City, Stocks etc.)' },
     { k: '9', n: 'Football Matches' },
+    { k: '10', n: 'Spotify Music Control' },
     { k: '0', n: 'Exit' }
   ];
 
@@ -88,22 +89,8 @@ export function showBanner() {
   });
 
   console.log(chalk.cyan(`\n  ${'─'.repeat(w)}\n`));
-  console.log(chalk.yellow('  Your choice: '));
 }
 
 export async function getMenuKey() {
-  return new Promise((resolve) => {
-    setRawModeSafe(true);
-    process.stdin.resume();
-
-    const onKey = (str, key) => {
-      setRawModeSafe(false);
-      process.stdin.pause();
-      process.stdin.off('keypress', onKey);
-      resolve(str || (key && key.name) || '');
-    };
-
-    readline.emitKeypressEvents(process.stdin);
-    process.stdin.on('keypress', onKey);
-  });
+  return askQuestion(chalk.yellow('  Your choice: '));
 }

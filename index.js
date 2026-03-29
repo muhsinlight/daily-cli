@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import 'dotenv/config';
-import dotenv from 'dotenv';
+import './utils/env-loader.js';
 import chalk from 'chalk';
-import path from 'path';
 import { fileURLToPath } from 'url';
 import { Command } from 'commander';
+
+const __filename = fileURLToPath(import.meta.url);
 
 import { showBanner, waitForKey, getMenuKey, clearScreen } from './utils/ui.js';
 
@@ -17,11 +17,9 @@ import { showAdvice } from './services/advice.js';
 import { showTranslation } from './services/translation.js';
 import { showSettings } from './services/settings.js';
 import { showSports } from './services/sports.js';
+import { showMusic } from './services/music.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-dotenv.config({ path: path.join(__dirname, '.env') });
+// dotenv.config() logic is now handled at the top
 
 const program = new Command();
 
@@ -104,6 +102,15 @@ program
   });
 
 program
+  .command('music')
+  .alias('m')
+  .description('Müzik çalar (Spotify)')
+  .action(async () => {
+    await showMusic();
+    process.exit(0);
+  });
+
+program
   .command('settings')
   .description('Ayarları açar')
   .action(async () => {
@@ -121,6 +128,8 @@ const MENU_ACTIONS = {
   '7': showTranslation,
   '8': showSettings,
   '9': showSports,
+  'm': showMusic,
+  '10': showMusic,
 };
 
 async function interactiveMenu() {
@@ -134,7 +143,7 @@ async function interactiveMenu() {
     }
 
     try {
-      const action = MENU_ACTIONS[key];
+      const action = MENU_ACTIONS[key.toLowerCase()];
       if (action) {
         await action();
         await waitForKey();
@@ -142,7 +151,7 @@ async function interactiveMenu() {
         if (!key || key === '\r' || key === '\n' || key === 'return') {
            continue;
         }
-        console.log(chalk.red('\n  Please use only menu numbers (0-9)!'));
+        console.log(chalk.red(`\n  Please use only menu items (0-9, m or 10)!`));
         await new Promise(r => setTimeout(r, 1200)); 
       }
     } catch (err) {
